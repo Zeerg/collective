@@ -1,0 +1,74 @@
+version: "3"
+
+services:
+  traefik:
+    image: "traefik:latest"
+    container_name: "traefik"
+    ports:
+      - "8118:8118"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.tor.address=:8118"
+    networks:
+      - traefik
+      - pihole
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+    dns:
+      - 172.18.18.10
+    depends_on: 
+       - pihole
+    tmpfs:
+       - /run
+  tor:
+    build: ./docker/torprox
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.tcp.routers.tor.entrypoints=tor"
+      - "traefik.tcp.routers.tor.rule=HostSNI(`*`)"
+    networks:
+      - traefik
+      - pihole
+    dns:
+      - 172.18.18.10
+    tmpfs:
+      - /tmp
+    depends_on: 
+       - traefik
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    restart: unless-stopped
+    environment: 
+      - DNS1=1.1.1.1
+      - DNS2=1.1.1.1
+    networks:
+      pihole:
+        ipv4_address: 172.18.18.10
+
+networks:
+  traefik:
+    driver: bridge
+    ipam:
+       driver: default
+       config:
+         - subnet: 172.18.17.0/24
+  pihole:
+    driver: bridge
+    ipam:
+       driver: default
+       config:
+         - subnet: 172.18.18.0/24

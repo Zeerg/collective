@@ -1,0 +1,6 @@
+User tor
+HardwareAccel 1
+SocksPort 127.0.0.1:9050
+DataDirectory /tmp/tor
+AvoidDiskWrites 1
+Log notice file /dev/null
