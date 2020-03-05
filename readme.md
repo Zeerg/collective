@@ -41,11 +41,7 @@ Pulls latest and uses the config in the compose file
 
 ### pihole(DNS)
 
-Containers use the pihole container for DNS
-
-### Randomando[WIP]
-
-Starts on Reddit then clicks links to generate traffic. 
+Containers use the pihole container for DNS 
 
 ## Command Examples
 
