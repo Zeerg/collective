@@ -3,7 +3,6 @@ version: "3"
 services:
   traefik:
     image: "traefik:latest"
-    container_name: "traefik"
     ports:
       - "8118:8118"
     command:
@@ -20,8 +19,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     restart: unless-stopped
     dns:
-      - 172.18.18.10
-    depends_on: 
+      - 172.22.22.10
+    depends_on:
        - pihole
     tmpfs:
        - /run
@@ -37,27 +36,31 @@ services:
       - traefik
       - pihole
     dns:
-      - 172.18.18.10
+      - 172.22.22.10
     tmpfs:
       - /tmp
-    depends_on: 
+    depends_on:
        - traefik
   pihole:
-    container_name: pihole
     image: pihole/pihole:latest
     ports:
       - "53:53/tcp"
       - "53:53/udp"
+      - "67:67/udp"
+      - "8080:80/tcp"
+      - "8443:443/tcp"
+    environment:
+      TZ: 'America/Chicago'
     dns:
       - 127.0.0.1
       - 1.1.1.1
     restart: unless-stopped
-    environment: 
+    environment:
       - DNS1=1.1.1.1
       - DNS2=1.1.1.1
     networks:
       pihole:
-        ipv4_address: 172.18.18.10
+        ipv4_address: 172.22.22.10
 
 networks:
   traefik:
@@ -65,10 +68,10 @@ networks:
     ipam:
        driver: default
        config:
-         - subnet: 172.18.17.0/24
+         - subnet: 172.22.21.0/24
   pihole:
     driver: bridge
     ipam:
        driver: default
        config:
-         - subnet: 172.18.18.0/24
+         - subnet: 172.22.22.0/24
