@@ -50,6 +50,9 @@ curl
 ```
 curl --proxy http://localhost:8118 https://icanhazip.com
 ```
+## Common Issues
+
+If you are running multiple docker networks you may need to adjust the IP range in the docker-compose file.
 
 ## Broswer Specifc Recommendations
 
