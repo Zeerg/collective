@@ -54,20 +54,6 @@ curl --proxy http://localhost:8118 https://icanhazip.com
 
 If you are running multiple docker networks you may need to adjust the IP range in the docker-compose file.
 
-## Broswer Specifc Recommendations
-
-If you are using the collective with Chrome, Firefox, Safari...etc you'll need to do a few things besides using the proxy.
-
-### Disable WebRTC
-
-* Chrome 
-  * Type this in the browser navigation ```chrome://flags/#enable-webrtc-hide-local-ips-with-mdns``` switch to enabled
-  * https://chrome.google.com/webstore/detail/webrtc-network-limiter/npeicpdbkakmehahjeeohfdhnlpdklia
-
-* Firefox
-  * Set “media.peerconnection.enabled.” to False
-  * https://github.com/ChrisAntaki/disable-webrtc-firefox
-
 
 ## Similar Projects
 
